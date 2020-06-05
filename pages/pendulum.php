@@ -5,16 +5,17 @@
   </div>
   <div class="row">
     <div class="col-md-9">
-      <div class="" id="graph" style="height: 300px; width: 100%"></div>
+      <div class="mt-2" id="graph" style="height: 300px; width: 100%"></div>
       <canvas class='ml-5' id="pendulum" width="1000" height="300"></canvas>
     </div>
-    <form class="col-md-3 alert-success" action="" method="post">
+    <form class="col-md-3 board pt-2" action="" method="post">
       <p class='h3 m-1 mb-3 text-center'>Input position</p>
 
       <div class="row justify-content-md-center">
 
+        <p class="col-md-12">Use values between -20 and +20 for the best experience.</p>
         <input class="col-md-4" type="text" name="position_new" value="" placeholder='Type position here'>
-        <input class="btn-info col-md-4 m-1" type="button" name="submit_get_coords" value="Move lever" onclick='get_result(this); return false;'>
+        <input class="btn-info col-md-4 ml-1" type="button" name="submit_get_coords" value="Move lever" onclick='get_result(this); return false;'>
 
         <label class='col-md-6 m-2' for="is_graph">Enable plot</label>
         <input checked type="checkbox" name="is_graph" value="" onchange="change_graph(this); return false;">
@@ -42,6 +43,11 @@
           }
         </script>
 
+
+        <input class="btn-info col-md-6 m-1" type="button" name="submit_set_translation" value="Set translation" onclick='set_translation(this); return false;'>
+        <input class="btn-info col-md-6 m-1" type="button" name="submit_get_translation" value="Get translation" onclick='get_translation(this); return false;'>
+        <input class="btn-danger col-md-6 m-1" type="button" name="submit_stop_translation" value="Stop translation" onclick='window.location = "/cas?p=pendulum"'>
+
         <input type="text" name="position" value="0" hidden>
         <input type="text" name="angle" value="0" hidden>
       </div>
@@ -49,6 +55,12 @@
       <script type="text/javascript">
       var allow = true;
       function get_result(event){
+
+        if($("input[name='position_new']")[0].value < -20 || $("input[name='position_new']")[0].value > 20){
+          $("input[name='position_new']")[0].value = "Wrong parameter!";
+          return false;
+        }
+
         if(allow){
           allow = false;
         }
@@ -98,6 +110,67 @@
           error: function(response) {}
         });
       }
+
+      function set_translation(event){
+        setInterval(function tranlsate(){
+          var send_data = {
+            'position': $("input[name='position']")[0].value,
+            'angle': $("input[name='angle']")[0].value,
+            'token': 'Y29tcHV0ZXJfYWlkZWRfc3lzdGVt'
+          };
+          $.ajax({
+            url:     "api/pendulum_t.php",
+            type:     "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(send_data),
+            success: function(response) {},
+            error: function(response) {}
+          });
+        }, 100);
+
+      }
+
+      function get_translation(event){
+        var t = 0;
+        var graph_index = 0;
+        setInterval(function tranlsate(){
+          var send_data = {
+            'token': 'Y29tcHV0ZXJfYWlkZWRfc3lzdGVt'
+          };
+          $.ajax({
+            url:     "api/pendulum_t.php",
+            type:     "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(send_data),
+            success: function(response) {
+              animate(ctx, grid_size * response.data.x[0][0], response.data.x[0][2]);
+              t++;
+
+                position_points.push({
+                  x: graph_index,
+                  y: 10 * response.data.x[0][0]
+                });
+                angle_points.push({
+                  x: graph_index,
+                  y: 10 * response.data.x[0][2]
+                });
+                graph_index++;
+                if((position_points.length + angle_points.length) > 100){
+                  position_points.shift();
+                  angle_points.shift();
+                }
+                chart.render();
+                $("input[name='position']")[0].value = response.data.x[0][0];
+                $("input[name='angle']")[0].value = response.data.x[0][2];
+
+            },
+            error: function(response) {}
+          });
+
+      }, 100);
+    }
       </script>
 
     </form>
@@ -120,9 +193,7 @@
     var height = 25;
     var lever_height = 80;
 
-
     ctx.fillStyle = "rgb(0,0,0)";
-
 
     // Calculating position
     var pos = {};
@@ -134,13 +205,21 @@
     pos['y_lever_end'] = pos['y_lever_start'] - lever_height * Math.cos(angle);
 
     // Drawing block
+    ctx.fillStyle = "rgb(0, 0, 200)";
     ctx.fillRect(pos['x'], pos['y'], width, height);
 
     // Drawing lever
+    ctx.strokeStyle = "rgb(0, 0, 0)";
     ctx.beginPath();
     ctx.moveTo(pos['x_lever_start'], pos['y_lever_start']);
     ctx.lineTo(pos['x_lever_end'], pos['y_lever_end']);
+    ctx.lineTo(pos['x_lever_start'], pos['y_lever_start']);
     ctx.stroke();
+
+    ctx.fillStyle = "rgb(230, 0, 0)";
+    ctx.beginPath();
+    ctx.arc(pos['x_lever_end'], pos['y_lever_end'], 14, 0, Math.PI * 2, true);
+    ctx.fill();
 
   }
 
