@@ -17,9 +17,9 @@ pkg load control
               sys = ss(Ac,B*N,C,D);
 
               t = 0:0.05:10;
-              r =15;
-              initPozicia=-1.29911;
-              initUhol=-0.00319;
+              r =16;
+              initPozicia=0;
+              initUhol=0;
               [y,t,x]=lsim(sys,r*ones(size(t)),t,[initPozicia;0;initUhol;0]);
               x
               
