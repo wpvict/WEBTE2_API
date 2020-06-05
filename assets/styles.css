@@ -1,0 +1,31 @@
+.warning {
+  background-color: #F85C50;
+}
+
+.choice {
+  margin: 1%;
+}
+
+th.sorted[data-order="-1"]::after {
+	content: "▼"
+}
+
+th.sorted[data-order="1"]::after {
+	content: "▲"
+}
+
+.koalicia {
+  background-color: green;
+}
+
+.oposicia {
+  background-color: red;
+}
+
+.container {
+  background-color: aliceblue;
+}
+
+.nav-cont {
+  background-color: #267878;
+}
