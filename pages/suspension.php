@@ -1,39 +1,47 @@
-<div id="graph" style="height: 300px; width: 100%"></div>
 <div class="container-fluid">
   <div class="row">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <script type="text/javascript">
-    var graph_index = 0;
-    var position_points = [];
-    var angle_points = [];
-    var chart = new CanvasJS.Chart("graph", {
-    title :{
-      text: "Dynamic Data"
-    },
-    axisY: {
-      includeZero: false
-    },
-    data: [{
-      type: "line",
-      dataPoints: position_points
-    },
-    {
-      type: "line",
-      dataPoints: angle_points
-    }]
-    });
-    chart.render();
-    </script>
+
   </div>
   <div class="row">
-    <canvas class='col-md-9' id="wheel" width="1000" height="300"></canvas>
-    <form class="col-md-3 alert-success" action="" method="post">
+    <div class="col-md-9">
+      <div class="mt-2" id="graph" style="height: 300px; width: 100%"></div>
+      <canvas class='ml-5' id="wheel" width="1000" height="300"></canvas>
+    </div>
+    <form class="col-md-3 board" action="" method="post">
       <p class='h3 m-1 mb-3 text-center'>Input position</p>
 
       <div class="row justify-content-md-center">
 
+        <p class="col-md-12">Use values between -20 and +20 for the best experience.</p>
+        <div id="tooltip" class="col-md-12 alert-danger fade"></div>
         <input class="col-md-4" type="text" name="position_new" value="" placeholder='Type position here'>
-        <input class="btn-info col-md-4 m-1" type="button" name="submit_get_coords" value="Move wheel" onclick='get_result(this); return false;'>
+        <input class="btn-info col-md-4 ml-1" type="button" name="submit_get_coords" value="Move wheel" onclick='get_result(this); return false;'>
+
+        <label class='col-md-6 m-2' for="is_graph">Enable plot</label>
+        <input checked type="checkbox" name="is_graph" value="" onchange="change_graph(this); return false;">
+
+        <script type="text/javascript">
+          function change_graph(event){
+            if($("#is_graph").is(":checked")){
+              $("#graph").toggle();
+            } else {
+              $("#graph").toggle();
+            }
+          }
+        </script>
+
+        <label class='col-md-6 m-2' for="is_animation">Enable animation</label>
+        <input checked type="checkbox" name="is_animation" value="" onchange="change_animation(this); return false;">
+
+        <script type="text/javascript">
+          function change_animation(event){
+            if($("#is_animation").is(":checked")){
+              $("#wheel").toggle();
+            } else {
+              $("#wheel").toggle();
+            }
+          }
+        </script>
 
         <input type="text" name="auto_position_0" value="0" hidden>
         <input type="text" name="auto_position_1" value="0" hidden>
@@ -45,6 +53,20 @@
       <script type="text/javascript">
       var allow = true;
       function get_result(event){
+
+        $("#tooltip").addClass('fade');
+        if(!parseFloat($("input[name='position_new']")[0].value)){
+          $("#tooltip").removeClass('fade');
+          $("#tooltip").text("Only digits allowed!");
+          return false;
+        }
+
+        if($("input[name='position_new']")[0].value < -20 || $("input[name='position_new']")[0].value > 20){
+          $("#tooltip").removeClass('fade');
+          $("#tooltip").text("Wrong parameters!");
+          return false;
+        }
+
         if(allow){
           allow = false;
         }
@@ -110,13 +132,13 @@
 <script>
 
   var canvas_width = 1000;
-  var canvas_height = 500;
+  var canvas_height = 550;
   var grid_size = 25;
 
   function draw_wheel(ctx, auto_pos, wheel_pos){
 
-    var wheel_width = 30;
-    var wheel_height = 80;
+    var wheel_width = 40;
+    var wheel_height = 90;
 
     var amo_width = 16;
     var amo_height = 2;
@@ -175,12 +197,56 @@
 
 
     // Drawing car
+    ctx.fillStyle = "rgb(30,30,30)";
     ctx.fillRect(pos['x_auto'], pos['y_auto'], auto_width, auto_height);
+
+    for(var i = 0; i < 40; i+= 10){
+      ctx.fillStyle = "rgb(120, 120, 120)";
+      ctx.fillRect(pos['x_auto'] + 70, pos['y_auto'] + 15 + i , 260, 5);
+      ctx.fillStyle = "rgb(80, 80, 80)";
+      ctx.fillRect(pos['x_auto'] + 70, pos['y_auto'] + 20 + i , 260, 5);
+    }
+
+
+    // Drawing head lights
+    ctx.fillStyle = "rgb(30,50,0)";
+    ctx.beginPath();
+    ctx.arc(pos['x_auto'] + 40, pos['y_auto'] + 30, 20, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(pos['x_auto'] + auto_width - 40, pos['y_auto'] + 30, 20, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    // Drawing lights
+
+    ctx.fillStyle = "rgb(255,255,0)";
+    ctx.beginPath();
+    ctx.arc(pos['x_auto'] + 40, pos['y_auto'] + 30, 15, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(pos['x_auto'] + auto_width - 40, pos['y_auto'] + 30, 15, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    // Drawing cover
+
+    ctx.fillStyle = "rgb(60,60,60)";
     ctx.beginPath();
     ctx.moveTo(pos['x_auto'] + 30, pos['y_auto']);
     ctx.lineTo(pos['x_auto'] + 130, pos['y_auto'] - 200);
     ctx.lineTo(pos['x_auto'] + 270, pos['y_auto'] - 200);
     ctx.lineTo(pos['x_auto'] + 370, pos['y_auto']);
+    ctx.fill();
+
+    // Drawwing glass
+
+    ctx.fillStyle = "rgba(0, 0,60, 0.3)";
+    ctx.beginPath();
+    ctx.moveTo(pos['x_auto'] + 50, pos['y_auto'] - 10);
+    ctx.lineTo(pos['x_auto'] + 80, pos['y_auto'] - 80);
+    ctx.lineTo(pos['x_auto'] + 320, pos['y_auto'] - 80);
+    ctx.lineTo(pos['x_auto'] + 350, pos['y_auto'] - 10);
     ctx.fill();
 
   }
@@ -215,4 +281,27 @@
   draw_wheel(ctx, 0, 0);
 
 
+</script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+  var graph_index = 0;
+  var position_points = [];
+  var angle_points = [];
+  var chart = new CanvasJS.Chart("graph", {
+  title :{
+    text: "Dynamic Data"
+  },
+  axisY: {
+    includeZero: false
+  },
+  data: [{
+    type: "line",
+    dataPoints: position_points
+  },
+  {
+    type: "line",
+    dataPoints: angle_points
+  }]
+  });
+  chart.render();
 </script>
