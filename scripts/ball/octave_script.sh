@@ -14,9 +14,9 @@ pkg load control
               sys = ss(A-B*K,B,C,D);
 
               t = 0:0.01:5;
-              r =-1;
-              initRychlost=0.46339;
-              initZrychlenie=-0.06024;
+              r =500;
+              initRychlost=0.05702;
+              initZrychlenie=-0.00276;
               [y,t,x]=lsim(N*sys,r*ones(size(t)),t,[initRychlost;0;initZrychlenie;0]);
               x
               

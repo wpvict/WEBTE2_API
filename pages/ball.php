@@ -1,32 +1,13 @@
-<div id="graph" style="height: 300px; width: 100%"></div>
+
 <div class="container-fluid">
   <div class="row">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <script type="text/javascript">
-    var graph_index = 0;
-    var position_points = [];
-    var angle_points = [];
-    var chart = new CanvasJS.Chart("graph", {
-    title :{
-      text: "Dynamic Data"
-    },
-    axisY: {
-      includeZero: false
-    },
-    data: [{
-      type: "line",
-      dataPoints: position_points
-    },
-    {
-      type: "line",
-      dataPoints: angle_points
-    }]
-    });
-    chart.render();
-    </script>
+
   </div>
   <div class="row">
-    <canvas class='col-md-9' id="ball" width="1000" height="300"></canvas>
+    <div class="col-md-9">
+      <div id="graph" style="height: 300px; width: 100%"></div>
+      <canvas class='ml-5' id="ball" width="1000" height="300"></canvas>
+    </div>
     <form class="col-md-3 alert-success" action="" method="post">
       <p class='h3 m-1 mb-3 text-center'>Input position</p>
 
@@ -34,6 +15,32 @@
 
         <input class="col-md-4" type="text" name="position_new" value="" placeholder='Type position here'>
         <input class="btn-info col-md-4 m-1" type="button" name="submit_get_coords" value="Move ball" onclick='get_result(this); return false;'>
+
+        <label class='col-md-6 m-2' for="is_graph">Enable plot</label>
+        <input checked type="checkbox" name="is_graph" value="" onchange="change_graph(this); return false;">
+
+        <script type="text/javascript">
+          function change_graph(event){
+            if($("#is_graph").is(":checked")){
+              $("#graph").toggle();
+            } else {
+              $("#graph").toggle();
+            }
+          }
+        </script>
+
+        <label class='col-md-6 m-2' for="is_animation">Enable animation</label>
+        <input checked type="checkbox" name="is_animation" value="" onchange="change_animation(this); return false;">
+
+        <script type="text/javascript">
+          function change_animation(event){
+            if($("#is_animation").is(":checked")){
+              $("#ball").toggle();
+            } else {
+              $("#ball").toggle();
+            }
+          }
+        </script>
 
         <input type="text" name="position" value="0" hidden>
         <input type="text" name="angle" value="0" hidden>
@@ -184,4 +191,27 @@
   draw_ball(ctx, 0, 0);
 
 
+</script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+    var graph_index = 0;
+    var position_points = [];
+    var angle_points = [];
+    var chart = new CanvasJS.Chart("graph", {
+    title :{
+      text: "Dynamic Data"
+    },
+    axisY: {
+      includeZero: false
+    },
+    data: [{
+      type: "line",
+      dataPoints: position_points
+    },
+    {
+      type: "line",
+      dataPoints: angle_points
+    }]
+    });
+    chart.render();
 </script>
