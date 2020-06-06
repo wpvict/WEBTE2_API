@@ -1,3 +1,16 @@
+<?php
+  session_start();
+
+  if(isset($_GET['lang'])){
+    if($_GET['lang'] == 'en' || $_GET['lang'] == 'sk'){
+      $_SESSION['lang'] = $_GET['lang'];
+    }
+  }
+
+  if(!isset($_SESSION['lang'])){
+    $_SESSION['lang'] = 'sk';
+  }
+  ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -5,6 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CAS</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script
 			  src="https://code.jquery.com/jquery-3.4.1.min.js"
 			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -19,12 +33,14 @@
     <nav class="navbar navbar-expand-lg navbar-light nav-cont">
         <div class="container-fluid">
           <div class="navbar-header col-md-2">
-            <a class="navbar-brand" href="#"><h2>CAS</h2></a>
+            <a class="navbar-brand" href="#"><h2><strong>CAS</strong></h2></a>
           </div>
           <div class="navbar-collapse col-md-8">
-            <?php include_once "pages/menu.php" ?>
+            <?php include_once "pages/" . $_SESSION['lang'] . "/menu.php" ?>
           </div>
-          <div class="col-md-2"></div>
+          <div class="col-md-2">
+
+          </div>
         </div>
       </nav>
 
@@ -33,39 +49,39 @@
         $page = NULL;
         switch(htmlspecialchars($_GET['p'])){
           case 'interactive': {
-            include_once "pages/interactive.php";
+            include_once "pages/" . $_SESSION['lang'] . "/interactive.php";
             break;
           };
           case 'pendulum': {
-            include_once "pages/pendulum.php";
+            include_once "pages/" . $_SESSION['lang'] . "/pendulum.php";
             $page = $_GET['p'];
             break;
           };
           case 'ball': {
-            include_once "pages/ball.php";
+            include_once "pages/" . $_SESSION['lang'] . "/ball.php";
             $page = $_GET['p'];
             break;
           };
           case 'suspension': {
-            include_once "pages/suspension.php";
+            include_once "pages/" . $_SESSION['lang'] . "/suspension.php";
             $page = $_GET['p'];
             break;
           };
           case 'aircraft': {
-            include_once "pages/aircraft.php";
+            include_once "pages/" . $_SESSION['lang'] . "/aircraft.php";
             $page = $_GET['p'];
             break;
           };
           case 'statistics': {
-            include_once "pages/statistics.php";
+            include_once "pages/" . $_SESSION['lang'] . "/statistics.php";
             break;
           };
           case 'docs': {
-            include_once "pages/docs.php";
+            include_once "pages/" . $_SESSION['lang'] . "/docs.php";
             break;
           };
           default: {
-            include_once "pages/404.php";
+            include_once "pages/" . $_SESSION['lang'] . "/404.php";
             break;
           };
         }
@@ -82,7 +98,7 @@
             unset($db);
         }
       } else {
-        include_once "pages/pendulum.php";
+        include_once "pages/" . $_SESSION['lang'] . "/pendulum.php";
 
       }
 

@@ -12,11 +12,11 @@ pkg load control
               sys = ss(Aa-Ba(:,1)*K,Ba,Ca,Da);
 
               t = 0:0.01:5;
-              r =0.156789;
-              initX1=-0.19977;
-              initX1d=-0.01376;
-              initX2=0.00006;
-              initX2d=-0.00818;
+              r =0.1;
+              initX1=0;
+              initX1d=0;
+              initX2=0;
+              initX2d=0;
               [y,t,x]=lsim(sys*[0;1],r*ones(size(t)),t,[initX1;initX1d;initX2;initX2d;0]);
               x
               

@@ -8,7 +8,7 @@
       <div class="mt-2" id="graph" style="height: 300px; width: 100%"></div>
       <canvas class='ml-5' id="pendulum" width="1000" height="300"></canvas>
     </div>
-    <form class="col-md-3 board pt-2" action="" method="post">
+    <form class="col-md-3 board pt-2" action="#" method="post">
       <p class='h3 m-1 mb-3 text-center'>Input position</p>
 
       <div class="row justify-content-md-center">

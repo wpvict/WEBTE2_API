@@ -11,9 +11,9 @@ $docs = $db->get_docs();
 
  ?>
 <div class="container pt-3">
-  <form class="" action="" method="post">
+  <form class="" action="#" method="post">
     <div class="row justify-content-md-center m-3">
-      <input class="btn-success col-md-4" type="button" name="submit_get_log" value="Export docs file as PDF" onclick='window.location = "./downloads/docs_pdf.php"; return false;'>
+      <input class="btn-success col-md-4 p-2" type="button" name="submit_get_log" value="Export docs file as PDF" onclick='window.location = "./downloads/docs_pdf.php"; return false;'>
     </div>
   </form>
   <div class="row justify-content-md-center">
@@ -23,11 +23,13 @@ $docs = $db->get_docs();
     <p class='m-3'>All methods use URI <span style="font-style: italic">http://wt128.fei.stuba/</span>.</br>All methods returns either values, either error with message.</br>Token is requered for API usage.</p>
     <table class="table">
       <thead>
-        <th>HTTP method</th>
-        <th>API method</th>
-        <th>Parameters</th>
-        <th>Response</th>
-        <th>Description</th>
+        <tr>
+          <th>HTTP method</th>
+          <th>API method</th>
+          <th>Parameters</th>
+          <th>Response</th>
+          <th>Description</th>
+        </tr>
       </thead>
       <tbody>
         <?php

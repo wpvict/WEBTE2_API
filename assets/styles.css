@@ -14,18 +14,28 @@ th.sorted[data-order="1"]::after {
 	content: "▲"
 }
 
-.koalicia {
-  background-color: green;
-}
-
-.oposicia {
-  background-color: red;
-}
-
 .container {
-  background-color: aliceblue;
+  background-color: #c8d9fb;
 }
 
 .nav-cont {
-  background-color: #267878;
+  background-color: #0a2b7d;
+}
+
+.nav-link {
+  color: #c8d4f2!important;
+}
+
+.board {
+  background-color: #b8bcec;
+}
+
+.navbar-brand {
+  letter-spacing: 2px!important;
+  color: #8fc3f3!important;
+}
+
+.btn-info {
+  background-color: #2d2dfb!important;
+  border-color: #3333d8!important;
 }

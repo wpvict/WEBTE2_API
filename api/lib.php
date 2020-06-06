@@ -1,4 +1,12 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require '../include/phpmail/Exception.php';
+require '../include/phpmail/PHPMailer.php';
+require '../include/phpmail/SMTP.php';
+
 include_once "../include/DB.php";
 
 class API{
@@ -464,6 +472,59 @@ class API{
       echo json_encode(array("message" => "Invalid parameters."), JSON_UNESCAPED_UNICODE);
     }
   }
+  }
+
+  public function mail(){
+
+    if(isset($this->data->email)){
+
+      $mail = new PHPMailer(true);
+
+      try {
+        //Server settings
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+        $mail->isSMTP();                                            // Send using SMTP
+        $mail->Host       = 'smtp.mail.com';                    // Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+        $mail->Username   = 'xstuba@null.net';                     // SMTP username
+        $mail->Password   = 'Skuska20';                               // SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+        $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+        //Recipients
+        $mail->setFrom('xstuba@null.net', 'Stuba Sender');
+        $mail->addAddress($this->data->email);     // Add a recipient
+
+        // Content
+
+        $statistics = $this->db->get_statistics();
+
+        $body = "Tasks usage:<br/><br/>";
+        foreach($statistics as $key => $value){
+          $body .= $key . ": " . $value . "<br/>\r\n";
+        }
+
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = 'Statistics from wt128.fei.stuba.sk:8128/cas/';
+        $mail->Body    = $body;
+
+        $mail->send();
+
+        $result = [];
+        $result['status'] = true;
+
+        http_response_code(200);
+        echo json_encode($result);
+      } catch (Exception $e) {
+        // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        http_response_code(404);
+        echo json_encode(array("status" => false), JSON_UNESCAPED_UNICODE);
+      }
+
+    } else {
+      http_response_code(404);
+      echo json_encode(array("message" => "Invalid parameters."), JSON_UNESCAPED_UNICODE);
+    }
   }
 
 };

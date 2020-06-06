@@ -11,10 +11,10 @@ pkg load control
               sys = ss(A-B*K, B*N, C, D);
 
               t = 0:0.1:40;
-              r =3;
-              initAlfa=-0.01901958739;
-              initQ=-0.00000647830;
-              initTheta=0.50274746102;
+              r =0.5;
+              initAlfa=-0.01072;
+              initQ=-0.00000;
+              initTheta=1.00155;
               [y,t,x]=lsim(sys,r*ones(size(t)),t,[initAlfa;initQ;initTheta]);
               x
               z = r*ones(size(t))*N-x*K'
