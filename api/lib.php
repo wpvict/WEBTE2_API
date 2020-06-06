@@ -4,10 +4,10 @@ include_once "../include/DB.php";
 class API{
 
   protected $db;
-  protected $path_bash = "cd C:\WEB\localhost\cas\scripts\??? && bash script.sh";
-  // protected $path_bash = "sudo octave /home/xruban/public_html/cas/scripts/???/octave_script.sh";
-  protected $path_script = '../scripts/???/octave_script.sh';
-  // protected $path_script = '/home/xruban/public_html/cas/scripts/???/octave_script.sh';
+  // protected $path_bash = "cd C:\WEB\localhost\cas\scripts\??? && bash script.sh";
+  protected $path_bash = "sudo octave /home/xruban/public_html/cas/scripts/???/octave_script.sh";
+  // protected $path_script = '../scripts/???/octave_script.sh';
+  protected $path_script = '/home/xruban/public_html/cas/scripts/???/octave_script.sh';
   protected $data;
   protected $allow;
 
@@ -412,6 +412,59 @@ class API{
     $this->logging($code, $status, $error);
   }
 
+  public function pendulum_t(){
+    if(!$this->allow){
+      return 1;
+    }
+
+    if(isset($this->data->position) && isset($this->data->angle)){
+      $this->db->pendulum_set_values($this->data->position, $this->data->angle);
+    } else{
+      if(true){
+
+      $result = [];
+
+      $x = $this->db->pendulum_get_values()[0];
+
+      $result['data'] = ['x' => [[$x[1],0,$x[2]]]];
+
+      $result['status'] = true;
+
+      http_response_code(200);
+      echo json_encode($result);
+    } else {
+      http_response_code(404);
+      echo json_encode(array("message" => "Invalid parameters."), JSON_UNESCAPED_UNICODE);
+    }
+  }
+  }
+
+  public function ball_t(){
+    if(!$this->allow){
+      return 1;
+    }
+
+    if(isset($this->data->position) && isset($this->data->angle)){
+      $this->db->ball_set_values($this->data->position, $this->data->angle);
+    } else{
+      if(true){
+
+      $result = [];
+
+      $x = $this->db->ball_get_values()[0];
+
+      $result['data'] = ['x' => [[$x[1],0,$x[2]]]];
+
+      $result['status'] = true;
+
+      http_response_code(200);
+      echo json_encode($result);
+    } else {
+      http_response_code(404);
+      echo json_encode(array("message" => "Invalid parameters."), JSON_UNESCAPED_UNICODE);
+    }
+  }
+  }
 
 };
 
