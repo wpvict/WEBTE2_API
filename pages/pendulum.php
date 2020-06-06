@@ -13,7 +13,8 @@
 
       <div class="row justify-content-md-center">
 
-        <p class="col-md-12">Use values between -20 and +20 for the best experience.</p>
+        <p class="col-md-12">Use values between -15 and +15 for the best experience.</p>
+        <div id="tooltip" class="col-md-12 alert-danger fade"></div>
         <input class="col-md-4" type="text" name="position_new" value="" placeholder='Type position here'>
         <input class="btn-info col-md-4 ml-1" type="button" name="submit_get_coords" value="Move lever" onclick='get_result(this); return false;'>
 
@@ -56,8 +57,16 @@
       var allow = true;
       function get_result(event){
 
-        if($("input[name='position_new']")[0].value < -20 || $("input[name='position_new']")[0].value > 20){
-          $("input[name='position_new']")[0].value = "Wrong parameter!";
+        $("#tooltip").addClass('fade');
+        if(!parseFloat($("input[name='position_new']")[0].value)){
+          $("#tooltip").removeClass('fade');
+          $("#tooltip").text("Only digits allowed!");
+          return false;
+        }
+
+        if($("input[name='position_new']")[0].value < -15 || $("input[name='position_new']")[0].value > 15){
+          $("#tooltip").removeClass('fade');
+          $("#tooltip").text("Wrong parameters!");
           return false;
         }
 
